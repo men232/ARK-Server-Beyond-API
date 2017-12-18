@@ -63,14 +63,18 @@ void Init()
 
 	std::unordered_map<std::string, intptr_t> offsets_dump;
 	std::unordered_map<std::string, BitField> bitfields_dump;
+	
+	std::string rootDir = ArkApi::Tools::GetCurrentDir();
+	std::wstring pdbFilePath(rootDir.begin(), rootDir.end());
+	pdbFilePath += L"\\ShooterGameServer.pdb";
 
 	try
 	{
-		pdb_reader.Read(L"ShooterGameServer.pdb", &offsets_dump, &bitfields_dump);
+		pdb_reader.Read(pdbFilePath, &offsets_dump, &bitfields_dump);
 	}
 	catch (const std::runtime_error& error)
 	{
-		LOG(FATAL) << "Failed to read pdb. " << error.what();
+		LOG(FATAL) << "Failed to read (" << pdbFilePath << "). " << error.what();
 	}
 
 	ArkApi::Offsets::Get().Init(move(offsets_dump));
